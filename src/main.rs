@@ -42,40 +42,40 @@ mod tests {
 
     #[bench]
     fn bench_bubble_sort(b: &mut Bencher) {
-        let mut arr = get_unsorted_vector(0);
         b.iter(|| {
+            let mut arr = get_unsorted_vector(0);
             bubble_sort(&mut arr);
         });
     }
 
     #[bench]
     fn bench_merge_sort(b: &mut Bencher) {
-        let mut arr = get_unsorted_vector(0);
         b.iter(|| {
+            let mut arr = get_unsorted_vector(0);
             merge_sort(&mut arr);
         })
     }
 
     #[bench]
     fn bench_heap_sort(b: &mut Bencher) {
-        let mut arr = get_unsorted_vector(0);
         b.iter(|| {
+            let mut arr = get_unsorted_vector(0);
             heap_sort(&mut arr);
         })
     }
 
     #[bench]
     fn bench_quick_sort(b: &mut Bencher) {
-        let mut arr = get_unsorted_vector(0);
         b.iter(|| {
+            let mut arr = get_unsorted_vector(0);
             quick_sort(&mut arr);
         })
     }
 
     #[bench]
     fn bench_radix_sort(b: &mut Bencher) {
-        let mut arr = get_unsorted_vector(0);
         b.iter(|| {
+            let mut arr = get_unsorted_vector(0);
             radix_sort(&mut arr);
         })
     }
