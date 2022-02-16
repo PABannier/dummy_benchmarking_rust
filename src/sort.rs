@@ -1,3 +1,4 @@
+#[inline]
 pub fn bubble_sort<T: PartialOrd + Copy>(arr: &mut [T]) {
     // O(n²) time
     for i in 0..(arr.len() - 1) {
@@ -10,6 +11,7 @@ pub fn bubble_sort<T: PartialOrd + Copy>(arr: &mut [T]) {
 }
 
 pub mod merge_sort {
+    #[inline]
     pub fn merge_sort<T: PartialOrd + Copy>(arr: &mut [T]) {
         // O(nLogn) time
         if arr.len() > 1 {
@@ -54,6 +56,7 @@ pub mod merge_sort {
 }
 
 pub mod quick_sort {
+    #[inline]
     pub fn quick_sort<T: PartialOrd + Copy>(arr: &mut [T]) {
         // O(nLog(n)) time
         quick_sort_helper(arr, 0, arr.len() - 1);
@@ -90,6 +93,7 @@ pub mod quick_sort {
 }
 
 pub mod heap_sort {
+    #[inline]
     pub fn heap_sort<T: PartialOrd + Copy>(arr: &mut [T]) {
         let right = arr.len();
         let mid = right / 2;
@@ -129,6 +133,7 @@ pub mod radix_sort {
     use std::ops::Div;
     use std::ops::DivAssign;
 
+    #[inline]
     pub fn radix_sort<T>(arr: &mut [T])
     where
         T: PartialOrd + From<u64> + Copy + DivAssign + Div<Output = u64>,
