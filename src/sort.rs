@@ -1,4 +1,4 @@
-pub fn bubble_sort<T: Ord + Copy>(arr: &mut [T]) {
+pub fn bubble_sort<T: PartialOrd + Copy>(arr: &mut [T]) {
     // O(n²) time
     for i in 0..(arr.len() - 1) {
         for j in i..arr.len() {
@@ -10,7 +10,7 @@ pub fn bubble_sort<T: Ord + Copy>(arr: &mut [T]) {
 }
 
 pub mod merge_sort {
-    pub fn merge_sort<T: Ord + Copy>(arr: &mut [T]) {
+    pub fn merge_sort<T: PartialOrd + Copy>(arr: &mut [T]) {
         // O(nLogn) time
         if arr.len() > 1 {
             let mid = arr.len() / 2;
@@ -23,7 +23,7 @@ pub mod merge_sort {
         }
     }
 
-    fn merge<T: Ord + Copy>(arr1: &[T], arr2: &[T], out: &mut [T]) {
+    fn merge<T: PartialOrd + Copy>(arr1: &[T], arr2: &[T], out: &mut [T]) {
         let mut ptr1: usize = 0;
         let mut ptr2: usize = 0;
         let mut ptr3: usize = 0;
@@ -54,12 +54,12 @@ pub mod merge_sort {
 }
 
 pub mod quick_sort {
-    pub fn quick_sort<T: Ord + Copy>(arr: &mut [T]) {
+    pub fn quick_sort<T: PartialOrd + Copy>(arr: &mut [T]) {
         // O(nLog(n)) time
         quick_sort_helper(arr, 0, arr.len() - 1);
     }
 
-    fn quick_sort_helper<T: Ord + Copy>(arr: &mut [T], start: usize, end: usize) {
+    fn quick_sort_helper<T: PartialOrd + Copy>(arr: &mut [T], start: usize, end: usize) {
         if start < end {
             let pivot = partition(arr, start, end);
 
@@ -68,7 +68,7 @@ pub mod quick_sort {
         }
     }
 
-    fn partition<T: Ord + Copy>(arr: &mut [T], start: usize, end: usize) -> usize {
+    fn partition<T: PartialOrd + Copy>(arr: &mut [T], start: usize, end: usize) -> usize {
         let pivot = start;
         let mut left = start + 1;
         let mut right = end;
@@ -90,7 +90,7 @@ pub mod quick_sort {
 }
 
 pub mod heap_sort {
-    pub fn heap_sort<T: Ord + Copy>(arr: &mut [T]) {
+    pub fn heap_sort<T: PartialOrd + Copy>(arr: &mut [T]) {
         let right = arr.len();
         let mid = right / 2;
 
@@ -104,7 +104,7 @@ pub mod heap_sort {
         }
     }
 
-    fn sift_down<T: Ord + Copy>(arr: &mut [T], left: usize, right: usize) {
+    fn sift_down<T: PartialOrd + Copy>(arr: &mut [T], left: usize, right: usize) {
         let mut root = left;
         loop {
             let mut child = root * 2 + 1;
@@ -122,5 +122,65 @@ pub mod heap_sort {
                 break;
             }
         }
+    }
+}
+
+pub mod radix_sort {
+    use std::ops::Div;
+    use std::ops::DivAssign;
+
+    pub fn radix_sort<T>(arr: &mut [T])
+    where
+        T: PartialOrd + From<u64> + Copy + DivAssign + Div<Output = u64>,
+    {
+        if arr.len() == 0 {
+            return;
+        }
+
+        let mut max_num: T = T::from(0);
+        for idx in 0..arr.len() {
+            if arr[idx] > max_num {
+                max_num = arr[idx];
+            }
+        }
+
+        let mut digit_column = 1;
+        loop {
+            if max_num / T::from(digit_column) <= 0 {
+                break;
+            }
+            counting_sort(arr, digit_column);
+            digit_column *= 10;
+        }
+    }
+
+    fn counting_sort<T>(arr: &mut [T], digit_column: u64)
+    where
+        T: PartialOrd + From<u64> + Copy + DivAssign + Div<Output = u64>,
+    {
+        let mut counts = [0i32; 10];
+        let mut sorted: Vec<T> = vec![T::from(0); arr.len()];
+
+        for idx in 0..arr.len() {
+            let count_idx = (arr[idx] / T::from(digit_column)) % 10;
+            counts[count_idx as usize] += 1;
+        }
+
+        for idx in 1..counts.len() {
+            counts[idx] += counts[idx - 1];
+        }
+
+        let mut idx = arr.len() - 1;
+        loop {
+            let count_idx = (arr[idx] / T::from(digit_column)) % 10;
+            counts[count_idx as usize] -= 1;
+            sorted[counts[count_idx as usize] as usize] = arr[idx];
+            if idx == 0 {
+                break;
+            }
+            idx -= 1;
+        }
+
+        arr.copy_from_slice(&sorted[..]);
     }
 }
